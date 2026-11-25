@@ -1,0 +1,865 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QUIZ BATTLE: BOSS RUSH</title>
+    <meta
+      name="description"
+      content="A 2D Pixel Art RPG Quiz Boss Battle game where knowledge fuels heroic attacks against 25 unique bosses."
+    />
+    <meta property="og:title" content="QUIZ BATTLE: BOSS RUSH" />
+    <meta
+      property="og:description"
+      content="A 2D Pixel Art RPG Quiz Boss Battle game where knowledge fuels heroic attacks against 25 unique bosses."
+    />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Silkscreen:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body class="opening-active">
+    <canvas id="starfield-canvas" aria-hidden="true"></canvas>
+    <div class="bg-vignette" aria-hidden="true"></div>
+    <div class="ambient-glow ambient-glow-left" aria-hidden="true"></div>
+    <div class="ambient-glow ambient-glow-right" aria-hidden="true"></div>
+    <div id="opening-curtain" class="opening-curtain" aria-hidden="true"></div>
+    <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+    <div id="app-shell" class="app-shell">
+      <!-- Mobile Header -->
+      <header id="mobile-header" class="mobile-header">
+        <button
+          id="mobile-menu-toggle"
+          class="icon-btn"
+          type="button"
+          aria-label="Toggle navigation menu"
+          aria-expanded="false"
+        >
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round" />
+          </svg>
+        </button>
+        <span class="mobile-brand">QUIZ BATTLE</span>
+        <button
+          id="mobile-sound-toggle"
+          class="icon-btn"
+          type="button"
+          aria-label="Toggle sound effects"
+        >
+          <span class="sound-icon-slot"></span>
+        </button>
+      </header>
+
+      <!-- Left Navigation Sidebar -->
+      <aside id="sidebar" class="sidebar" aria-label="Game navigation">
+        <div class="sidebar-brand">
+          <div class="brand-crest" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14.5 3.5L20.5 9.5L9.5 20.5H3.5V14.5L14.5 3.5Z" />
+              <path d="M12 6L18 12" />
+            </svg>
+          </div>
+          <div class="brand-text">
+            <span class="brand-title">QUIZ BATTLE</span>
+            <span class="brand-sub">BOSS RUSH</span>
+          </div>
+        </div>
+
+        <nav class="sidebar-nav" id="sidebar-nav">
+          <button type="button" class="nav-btn active" data-nav="lobby">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9.5z" />
+            </svg>
+            <span data-i18n="nav_home">HOME</span>
+          </button>
+          <button type="button" class="nav-btn" data-nav="play">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="6 4 20 12 6 20 6 4" />
+            </svg>
+            <span data-i18n="nav_play">PLAY GAME</span>
+          </button>
+          <button type="button" class="nav-btn" data-nav="bosses">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2l3 6 6 1-4.5 4.5L18 20l-6-3-6 3 1.5-6.5L3 9l6-1 3-6z" />
+            </svg>
+            <span data-i18n="nav_bosses">BOSS COLLECTION</span>
+          </button>
+          <button type="button" class="nav-btn" data-nav="heroes">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+            <span data-i18n="nav_heroes">HEROES</span>
+          </button>
+          <button type="button" class="nav-btn" data-nav="materials">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+            </svg>
+            <span data-i18n="nav_materials">MATERIALS</span>
+          </button>
+          <button type="button" class="nav-btn" data-nav="difficulty">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 20V10M18 20V4M6 20v-4" stroke-linecap="round" />
+            </svg>
+            <span data-i18n="nav_difficulty">DIFFICULTY</span>
+          </button>
+          <button type="button" class="nav-btn" data-nav="scoreboard">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z" />
+              <path d="M7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3" />
+            </svg>
+            <span data-i18n="nav_scoreboard">SCOREBOARD</span>
+          </button>
+          <button type="button" class="nav-btn" data-nav="history">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="9" />
+              <path d="M12 7v5l3 3" stroke-linecap="round" />
+            </svg>
+            <span data-i18n="nav_history">BATTLE HISTORY</span>
+          </button>
+          <button type="button" class="nav-btn" data-nav="settings">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3" />
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.6.77 1.02 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+            </svg>
+            <span data-i18n="nav_settings">SETTINGS</span>
+          </button>
+        </nav>
+
+        <div class="sidebar-footer">
+          <button id="sidebar-sound-btn" type="button" class="sound-toggle-mini">
+            <span class="sound-icon-slot"></span>
+            <span id="sidebar-sound-label">Sound: ON</span>
+          </button>
+        </div>
+      </aside>
+
+      <div id="sidebar-backdrop" class="sidebar-backdrop" aria-hidden="true"></div>
+
+      <!-- Main Viewport -->
+      <main id="main-viewport" class="main-viewport">
+        <!-- 1. LOBBY / HOME SCREEN -->
+        <section id="screen-lobby" class="screen active" aria-label="Main Lobby">
+          <div class="lobby-stage" id="lobby-stage">
+            <div class="lobby-floor-grid" aria-hidden="true"></div>
+
+            <!-- Left Edge: Animated 2D Pixel Art Player Duo -->
+            <div class="lobby-character-edge lobby-player-edge" data-parallax="18">
+              <div class="character-spotlight player-spotlight" aria-hidden="true"></div>
+              <div class="hero-aura-ring" aria-hidden="true"></div>
+              <div class="lobby-duo-stage">
+                <canvas
+                  id="lobby-partner-canvas"
+                  class="pixel-canvas lobby-sprite lobby-partner-sprite"
+                  width="150"
+                  height="170"
+                  aria-label="Second Playable Hero"
+                ></canvas>
+                <canvas
+                  id="lobby-player-canvas"
+                  class="pixel-canvas lobby-sprite"
+                  width="220"
+                  height="240"
+                  aria-label="Animated Pixel Art Hero"
+                ></canvas>
+              </div>
+              <button
+                type="button"
+                id="lobby-pedestal-heroes-btn"
+                class="character-pedestal player-pedestal player-pedestal-btn rpg-bevel"
+                title="Select Squad Characters"
+              >
+                <span class="pedestal-name" id="lobby-hero-tag">Aegis Knight &amp; Nova Valkyrie</span>
+                <span class="pedestal-meta" id="lobby-hero-lv">Lv. 1 · Select Squad</span>
+              </button>
+            </div>
+
+            <!-- Center: Title, Welcome, Main Actions, Profile Stats -->
+            <div class="lobby-center" data-parallax="8">
+              <p class="lobby-welcome" id="lobby-welcome-msg">Welcome back, Challenger</p>
+
+              <div class="lobby-title-block">
+                <h1 class="game-title">
+                  <span class="title-top">QUIZ BATTLE</span>
+                  <span class="title-bottom">BOSS RUSH</span>
+                </h1>
+                <p class="game-subtitle" data-i18n="lobby_subtitle">Prove your knowledge. Defeat the Boss.</p>
+              </div>
+
+              <div class="lobby-cta-group">
+                <button id="btn-start-battle" type="button" class="btn-primary-gold btn-cta-glow">
+                  <span data-i18n="btn_start_battle">START BATTLE</span>
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </button>
+                <button id="btn-continue-game" type="button" class="btn-secondary-blue hidden">
+                  <span data-i18n="btn_continue">CONTINUE</span>
+                </button>
+              </div>
+
+              <!-- Player Profile & Statistics Card -->
+              <div class="lobby-profile-card rpg-frame">
+                <div class="profile-header-row">
+                  <div class="profile-identity">
+                    <span class="profile-label" id="lobby-rank-title">Adventurer</span>
+                    <div class="profile-name-row">
+                      <span id="lobby-player-name" class="profile-name">Player</span>
+                      <button
+                        id="btn-edit-name-lobby"
+                        type="button"
+                        class="inline-edit-btn"
+                        title="Edit player name"
+                        aria-label="Edit player name"
+                      >
+                        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
+                        </svg>
+                      </button>
+                    </div>
+                    <form id="lobby-name-form" class="inline-name-form hidden">
+                      <input
+                        id="lobby-name-input"
+                        type="text"
+                        maxlength="18"
+                        placeholder="Enter name..."
+                        aria-label="Player name"
+                      />
+                      <button type="submit" class="btn-mini-save" data-i18n="btn_save">Save</button>
+                      <button type="button" id="lobby-name-cancel" class="btn-mini-cancel" data-i18n="btn_cancel">Cancel</button>
+                    </form>
+                  </div>
+                  <div class="profile-level-block">
+                    <span class="profile-label" data-i18n="label_level">Level</span>
+                    <span id="lobby-player-level" class="profile-level-num tabular-nums">1</span>
+                  </div>
+                </div>
+
+                <!-- Animated XP Progress Bar -->
+                <div class="lobby-xp-row">
+                  <div class="xp-label-row">
+                    <span class="xp-label" data-i18n="label_xp_progress">Experience Progress</span>
+                    <span id="lobby-xp-text" class="xp-val tabular-nums">0 / 180 XP</span>
+                  </div>
+                  <div class="xp-track">
+                    <div id="lobby-xp-fill" class="xp-fill" style="width: 0%"></div>
+                  </div>
+                </div>
+
+                <div class="profile-stats-grid">
+                  <div class="stat-cell">
+                    <span class="stat-label" data-i18n="stat_high_score">Highest Score</span>
+                    <span id="lobby-high-score" class="stat-value text-gold tabular-nums">0</span>
+                  </div>
+                  <div class="stat-cell">
+                    <span class="stat-label" data-i18n="stat_total_wins">Total Victories</span>
+                    <span id="lobby-total-wins" class="stat-value text-green tabular-nums">0</span>
+                  </div>
+                  <div class="stat-cell">
+                    <span class="stat-label" data-i18n="stat_bosses_defeated">Bosses Defeated</span>
+                    <span id="lobby-bosses-defeated" class="stat-value text-blue tabular-nums">0 / 25</span>
+                  </div>
+                </div>
+
+                <div class="loadout-summary">
+                  <div class="loadout-item">
+                    <span class="loadout-key" data-i18n="loadout_squad">Squad Heroes</span>
+                    <button type="button" class="loadout-link" id="lobby-quick-heroes">
+                      <span id="lobby-selected-heroes">Aegis Knight + Nova Valkyrie</span>
+                    </button>
+                  </div>
+                  <div class="loadout-item">
+                    <span class="loadout-key" data-i18n="loadout_target_boss">Target Boss</span>
+                    <button type="button" class="loadout-link" id="lobby-quick-boss">
+                      <span id="lobby-selected-boss">Lv.1 Shadow Knight</span>
+                    </button>
+                  </div>
+                  <div class="loadout-item">
+                    <span class="loadout-key" data-i18n="loadout_material">Material</span>
+                    <button type="button" class="loadout-link" id="lobby-quick-material">
+                      <span id="lobby-selected-material">ALL MATERIAL</span>
+                    </button>
+                  </div>
+                  <div class="loadout-item">
+                    <span class="loadout-key" data-i18n="loadout_difficulty">Difficulty</span>
+                    <button type="button" class="loadout-link" id="lobby-quick-difficulty">
+                      <span id="lobby-selected-difficulty">MEDIUM</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Edge: Large Animated 2D Pixel Art Boss Character -->
+            <div class="lobby-character-edge lobby-boss-edge" data-parallax="-22">
+              <div id="lobby-boss-spotlight" class="character-spotlight boss-spotlight" aria-hidden="true"></div>
+              <div class="boss-silhouette-echo" aria-hidden="true">
+                <canvas id="lobby-boss-silhouette" class="pixel-canvas" width="280" height="280"></canvas>
+              </div>
+              <canvas
+                id="lobby-boss-canvas"
+                class="pixel-canvas lobby-sprite boss-sprite-large"
+                width="260"
+                height="260"
+                aria-label="Animated Pixel Art Boss"
+              ></canvas>
+              <div class="character-pedestal boss-pedestal rpg-bevel">
+                <span class="pedestal-name" id="lobby-boss-title">Shadow Knight</span>
+                <span class="pedestal-meta" id="lobby-boss-meta">Lv. 1 · 120 HP</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. BOSS SELECT / BOSS COLLECTION -->
+        <section id="screen-bosses" class="screen" aria-label="Boss Collection">
+          <div class="section-shell">
+            <div class="section-header">
+              <div>
+                <h2 class="section-title" data-i18n="bosses_title">Boss Collection</h2>
+                <p class="section-desc" data-i18n="bosses_desc">
+                  Select an unlocked Boss to challenge. Defeat each guardian to unlock the next tier up to Level 25.
+                </p>
+              </div>
+              <div class="segmented-tabs" id="boss-filter-tabs" role="tablist">
+                <button type="button" class="seg-tab active" data-boss-filter="all" data-i18n="filter_all_bosses">All (25)</button>
+                <button type="button" class="seg-tab" data-boss-filter="unlocked" data-i18n="filter_unlocked">Unlocked</button>
+                <button type="button" class="seg-tab" data-boss-filter="defeated" data-i18n="filter_defeated">Defeated</button>
+                <button type="button" class="seg-tab" data-boss-filter="cute" data-i18n="filter_cute">Cute (21–24)</button>
+              </div>
+            </div>
+
+            <div id="boss-grid" class="boss-grid"></div>
+          </div>
+        </section>
+
+        <!-- 2B. CHARACTER / HERO SELECTION -->
+        <section id="screen-heroes" class="screen" aria-label="Character Selection">
+          <div class="section-shell">
+            <div class="section-header">
+              <div>
+                <h2 class="section-title" data-i18n="heroes_title">Squad Character Selection</h2>
+                <p class="section-desc" data-i18n="heroes_desc">
+                  Choose your Lead Hero (Hero 1) and Backup Partner (Hero 2). If Hero 1 falls, Hero 2 enters for one final sudden-death attempt.
+                </p>
+              </div>
+              <button id="btn-heroes-next" type="button" class="btn-primary-gold btn-compact">
+                <span data-i18n="btn_next_bosses">Next: Bosses</span>
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+            </div>
+
+            <!-- Active 2-Character Squad Banner -->
+            <div class="squad-banner rpg-frame">
+              <div class="squad-slot-card active-slot" id="squad-card-0">
+                <div class="squad-slot-canvas-wrap">
+                  <canvas id="squad-preview-0" class="pixel-canvas squad-preview-canvas" width="96" height="96" aria-label="Lead Hero Preview"></canvas>
+                </div>
+                <div class="squad-slot-info">
+                  <span class="squad-slot-badge badge-lead" data-i18n="hero_slot_1_badge">HERO 1 · LEAD</span>
+                  <h3 class="squad-slot-name" id="squad-name-0">Aegis Knight</h3>
+                  <p class="squad-slot-role" id="squad-role-0">Azure Vanguard · Runic Broadsword</p>
+                </div>
+              </div>
+
+              <button id="btn-swap-squad" type="button" class="btn-swap-squad" title="Swap Lead &amp; Partner">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <span data-i18n="btn_swap_heroes">Swap Order</span>
+              </button>
+
+              <div class="squad-slot-card partner-slot" id="squad-card-1">
+                <div class="squad-slot-canvas-wrap">
+                  <canvas id="squad-preview-1" class="pixel-canvas squad-preview-canvas" width="96" height="96" aria-label="Backup Partner Preview"></canvas>
+                </div>
+                <div class="squad-slot-info">
+                  <span class="squad-slot-badge badge-partner" data-i18n="hero_slot_2_badge">HERO 2 · FINAL CHANCE</span>
+                  <h3 class="squad-slot-name" id="squad-name-1">Nova Valkyrie</h3>
+                  <p class="squad-slot-role" id="squad-role-1">Solar Lancer · Crimson Halberd</p>
+                </div>
+              </div>
+            </div>
+
+            <div id="hero-grid" class="hero-grid"></div>
+          </div>
+        </section>
+
+        <!-- 3. MATERIAL SELECT -->
+        <section id="screen-materials" class="screen" aria-label="Material Selection">
+          <div class="section-shell">
+            <div class="section-header">
+              <div>
+                <h2 class="section-title" data-i18n="materials_title">Quiz Materials</h2>
+                <p class="section-desc" data-i18n="materials_desc">
+                  Choose a focused subject category or select All Material for a full-spectrum knowledge trial.
+                </p>
+              </div>
+              <button id="btn-material-next" type="button" class="btn-primary-gold btn-compact">
+                <span data-i18n="btn_next_difficulty">Next: Difficulty</span>
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+            </div>
+
+            <div id="material-grid" class="material-grid"></div>
+          </div>
+        </section>
+
+        <!-- 4. DIFFICULTY SELECT -->
+        <section id="screen-difficulty" class="screen" aria-label="Difficulty Selection">
+          <div class="section-shell">
+            <div class="section-header">
+              <div>
+                <h2 class="section-title" data-i18n="difficulty_title">Difficulty &amp; Battle Prep</h2>
+                <p class="section-desc" data-i18n="difficulty_desc">
+                  Timers scale with Boss Level (Lv.1 = 40s, Lv.2 = 39s, Lv.3 = 38s). Choose your combat intensity.
+                </p>
+              </div>
+              <button id="btn-launch-battle" type="button" class="btn-primary-gold btn-compact">
+                <span data-i18n="btn_enter_arena">Enter Arena</span>
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polygon points="6 4 20 12 6 20 6 4" />
+                </svg>
+              </button>
+            </div>
+
+            <div class="prep-summary-bar" id="prep-summary-bar">
+              <div class="prep-item">
+                <span class="prep-label" data-i18n="prep_squad">Squad</span>
+                <button type="button" class="loadout-link prep-link" id="btn-prep-heroes">
+                  <span id="prep-hero-label">Aegis Knight + Nova Valkyrie</span>
+                </button>
+              </div>
+              <div class="prep-item">
+                <span class="loadout-label prep-label" data-i18n="prep_selected_boss">Selected Boss</span>
+                <span class="prep-value" id="prep-boss-label">Lv.1 Shadow Knight</span>
+              </div>
+              <div class="prep-item">
+                <span class="prep-label" data-i18n="prep_material">Material</span>
+                <span class="prep-value" id="prep-material-label">ALL MATERIAL</span>
+              </div>
+              <div class="prep-item">
+                <span class="prep-label" data-i18n="prep_questions">Questions</span>
+                <span class="prep-value tabular-nums" data-i18n="prep_questions_val">10 Unique</span>
+              </div>
+              <div class="prep-item">
+                <span class="prep-label" data-i18n="prep_timer">Effective Timer</span>
+                <span class="prep-value text-gold tabular-nums" id="prep-timer-label">40s / question</span>
+              </div>
+            </div>
+
+            <div id="difficulty-grid" class="difficulty-grid"></div>
+          </div>
+        </section>
+
+        <!-- 5. SCOREBOARD -->
+        <section id="screen-scoreboard" class="screen" aria-label="Scoreboard and Player Statistics">
+          <div class="section-shell">
+            <div class="section-header">
+              <div>
+                <h2 class="section-title" data-i18n="scoreboard_title">Scoreboard &amp; Adventurer Record</h2>
+                <p class="section-desc" data-i18n="scoreboard_desc">
+                  Persistent career combat metrics and progression across all boss encounters.
+                </p>
+              </div>
+            </div>
+
+            <div id="scoreboard-content" class="scoreboard-content"></div>
+          </div>
+        </section>
+
+        <!-- 6. BATTLE HISTORY -->
+        <section id="screen-history" class="screen" aria-label="Battle History">
+          <div class="section-shell">
+            <div class="section-header">
+              <div>
+                <h2 class="section-title" data-i18n="history_title">Battle History</h2>
+                <p class="section-desc" data-i18n="history_desc">Chronological record of your past Boss Rush encounters.</p>
+              </div>
+              <div class="segmented-tabs" id="history-filter-tabs" role="tablist">
+                <button type="button" class="seg-tab active" data-history-filter="all" data-i18n="filter_all">All</button>
+                <button type="button" class="seg-tab" data-history-filter="VICTORY" data-i18n="filter_victories">Victories</button>
+                <button type="button" class="seg-tab" data-history-filter="DEFEAT" data-i18n="filter_defeats">Defeats</button>
+              </div>
+            </div>
+
+            <div id="history-container" class="history-container"></div>
+          </div>
+        </section>
+
+        <!-- 7. SETTINGS -->
+        <section id="screen-settings" class="screen" aria-label="Settings">
+          <div class="section-shell">
+            <div class="section-header">
+              <div>
+                <h2 class="section-title" data-i18n="settings_title">Settings</h2>
+                <p class="section-desc" data-i18n="settings_desc">Manage audio feedback, language, player profile, and saved browser data.</p>
+              </div>
+            </div>
+
+            <div class="settings-stack">
+              <div class="setting-row">
+                <div class="setting-info">
+                  <h3 class="setting-title" data-i18n="settings_name_title">Player Name</h3>
+                  <p class="setting-desc" data-i18n="settings_name_desc">Displayed in the lobby, battle arena, and scoreboard.</p>
+                </div>
+                <form id="settings-name-form" class="settings-name-form">
+                  <input
+                    id="settings-name-input"
+                    type="text"
+                    maxlength="18"
+                    placeholder="Player"
+                    aria-label="Edit player name"
+                  />
+                  <button type="submit" class="btn-secondary-blue btn-sm" data-i18n="btn_update_name">Update Name</button>
+                </form>
+              </div>
+
+              <div class="setting-row">
+                <div class="setting-info">
+                  <h3 class="setting-title" data-i18n="settings_lang_title">Language</h3>
+                  <p class="setting-desc" data-i18n="settings_lang_desc">Switch game interface language between English and Indonesian.</p>
+                </div>
+                <div class="segmented-tabs" id="settings-lang-toggle" role="group" aria-label="Game language">
+                  <button type="button" class="seg-tab active" data-lang="en">English</button>
+                  <button type="button" class="seg-tab" data-lang="id">Indonesia</button>
+                </div>
+              </div>
+
+              <div class="setting-row">
+                <div class="setting-info">
+                  <h3 class="setting-title" data-i18n="settings_sound_title">Sound Effects</h3>
+                  <p class="setting-desc" data-i18n="settings_sound_desc">Synthesized Web Audio RPG attack, hit, timer warning, and victory sounds.</p>
+                </div>
+                <button id="settings-sound-toggle" type="button" class="toggle-switch" aria-pressed="true">
+                  <span class="toggle-track"><span class="toggle-thumb"></span></span>
+                  <span id="settings-sound-text">ON</span>
+                </button>
+              </div>
+
+              <div class="setting-row setting-row-danger">
+                <div class="setting-info">
+                  <h3 class="setting-title" data-i18n="settings_reset_title">Reset Saved Progress</h3>
+                  <p class="setting-desc" data-i18n="settings_reset_desc">
+                    Permanently erase all scores, unlocked bosses, battle history, and player profile from localStorage.
+                  </p>
+                </div>
+                <button id="btn-open-reset-modal" type="button" class="btn-danger" data-i18n="btn_reset_data">RESET DATA</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 8. BATTLE SCREEN -->
+        <section id="screen-battle" class="screen battle-screen" aria-label="RPG Battle Arena">
+          <!-- Cinematic Boss Introduction Cutscene HUD & Letterbox Overlay -->
+          <div id="boss-intro-overlay" class="boss-intro-overlay hidden" aria-live="assertive">
+            <div class="cinematic-letterbox letterbox-top" aria-hidden="true">
+              <span class="letterbox-tag" id="boss-intro-kicker">BOSS ENCOUNTER</span>
+              <span class="letterbox-stage-badge" id="boss-intro-stage-badge">ARENA DUEL</span>
+            </div>
+
+            <div class="cinematic-slowmo-vignette" aria-hidden="true"></div>
+            <div id="cinematic-impact-flash" class="cinematic-impact-flash" aria-hidden="true"></div>
+
+            <!-- Dramatic Boss Title Banner (Scene 1) -->
+            <div id="cinematic-title-card" class="cinematic-title-card">
+              <div class="title-card-inner rpg-frame">
+                <div id="boss-intro-glow" class="boss-intro-glow" aria-hidden="true"></div>
+                <span class="boss-intro-kicker" data-i18n="intro_challenger">CHALLENGER APPROACHES</span>
+                <h2 id="boss-intro-name" class="boss-intro-name">Shadow Knight</h2>
+                <p id="boss-intro-meta" class="boss-intro-meta">Lv. 1 · Novice Guardian · 120 HP</p>
+                <div class="boss-intro-hp-wrap">
+                  <div class="hp-bar-outer">
+                    <div id="boss-intro-hp-fill" class="hp-bar-fill hp-boss" style="width: 0%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Callout Banner (Scene 2) -->
+            <div id="cinematic-callout" class="cinematic-callout hidden" aria-hidden="true">
+              <span id="cinematic-callout-text" class="cinematic-callout-text">THE BATTLE BEGINS!</span>
+            </div>
+
+            <div class="cinematic-letterbox letterbox-bottom">
+              <p id="boss-intro-desc" class="boss-intro-desc"></p>
+              <button id="btn-skip-intro" type="button" class="btn-ghost btn-sm btn-skip-cutscene" data-i18n="btn_skip_intro">
+                Skip Intro
+              </button>
+            </div>
+          </div>
+
+          <!-- Top Battle Bar -->
+          <div class="battle-topbar">
+            <div class="battle-meta-info">
+              <span id="battle-boss-badge" class="battle-meta-title">Shadow Knight · Lv. 1</span>
+              <span class="meta-sep" aria-hidden="true">·</span>
+              <span id="battle-material-label">ALL MATERIAL</span>
+              <span class="meta-sep" aria-hidden="true">·</span>
+              <span id="battle-difficulty-label">MEDIUM</span>
+            </div>
+            <div class="battle-progress-pill">
+              <span data-i18n="label_question">Question</span>
+              <strong id="battle-q-counter" class="tabular-nums">1 / 10</strong>
+            </div>
+            <div class="battle-actions-top">
+              <button id="battle-sound-btn" type="button" class="icon-btn" aria-label="Toggle sound">
+                <span class="sound-icon-slot"></span>
+              </button>
+              <button id="btn-retreat-battle" type="button" class="btn-retreat" data-i18n="btn_retreat">Retreat</button>
+            </div>
+          </div>
+
+          <!-- Battle Arena Stage -->
+          <div id="battle-arena" class="battle-arena rpg-frame">
+            <div id="arena-cutscene-bg" class="arena-cutscene-bg" aria-hidden="true">
+              <div class="arena-horizon-glow" id="arena-horizon-glow"></div>
+              <div class="arena-battle-floor"></div>
+            </div>
+
+            <div id="battle-camera-stage" class="arena-camera-stage">
+              <canvas id="battle-fx-canvas" class="battle-fx-canvas" aria-hidden="true"></canvas>
+              <div id="damage-layer" class="damage-layer" aria-live="polite"></div>
+
+              <!-- Left Column: Player -->
+              <div class="combatant-panel combatant-player">
+                <div class="combatant-hud rpg-bevel">
+                  <div class="combatant-name-row">
+                    <span id="battle-player-name" class="combatant-name">Player</span>
+                    <span id="battle-player-lv" class="combatant-lv tabular-nums">Lv. 1</span>
+                  </div>
+                  <div class="hero-role-sub" id="battle-active-hero-label">Hero 1 · Aegis Knight</div>
+                  <div class="hp-bar-outer" role="progressbar" aria-label="Player HP">
+                    <div id="player-hp-trail" class="hp-bar-trail" style="width: 100%"></div>
+                    <div id="player-hp-fill" class="hp-bar-fill hp-player" style="width: 100%"></div>
+                  </div>
+                  <div class="hp-numbers-row">
+                    <span class="hp-text tabular-nums" id="player-hp-text">100 / 100 HP</span>
+                    <span class="hp-state" id="player-hp-state">READY</span>
+                  </div>
+                  <div id="battle-party-strip" class="battle-party-strip" aria-label="2-Character Squad Status">
+                    <div class="party-slot active" id="party-slot-0">
+                      <span class="party-slot-name" id="party-name-0">Aegis Knight</span>
+                      <span class="party-slot-state" id="party-state-0">ACTIVE</span>
+                    </div>
+                    <div class="party-slot standby" id="party-slot-1">
+                      <span class="party-slot-name" id="party-name-1">Nova Valkyrie</span>
+                      <span class="party-slot-state" id="party-state-1">STANDBY</span>
+                    </div>
+                  </div>
+                  <div class="combat-substats">
+                    <div>
+                      <span class="substat-k" data-i18n="label_score">Score</span>
+                      <strong id="battle-score" class="substat-v tabular-nums">0</strong>
+                    </div>
+                    <div>
+                      <span class="substat-k" data-i18n="label_combo">Combo</span>
+                      <strong id="battle-combo" class="substat-v text-gold tabular-nums">x0</strong>
+                    </div>
+                  </div>
+                  <div id="combo-multiplier-meter" class="combo-mult-meter" aria-label="Combo Damage Multiplier">
+                    <div class="combo-mult-head">
+                      <span class="combo-mult-label" data-i18n="label_dmg_mult">DMG Multiplier</span>
+                      <strong id="battle-dmg-mult" class="combo-mult-badge tabular-nums">x1.0</strong>
+                    </div>
+                    <div id="combo-streak-pips" class="combo-streak-pips" aria-hidden="true">
+                      <span class="streak-pip"></span>
+                      <span class="streak-pip"></span>
+                      <span class="streak-pip"></span>
+                      <span class="streak-pip"></span>
+                      <span class="streak-pip"></span>
+                    </div>
+                    <div id="combo-mult-hint" class="combo-mult-hint">5 streak for x1.5 DMG</div>
+                  </div>
+                </div>
+
+                <div class="arena-sprite-wrap" id="battle-player-wrap">
+                  <div class="arena-floor-shadow player-floor"></div>
+                  <canvas
+                    id="battle-player-canvas"
+                    class="pixel-canvas arena-sprite"
+                    width="200"
+                    height="200"
+                    aria-label="Player Hero Sprite"
+                  ></canvas>
+                </div>
+              </div>
+
+              <!-- Center Column: Timer, Question & Answers -->
+              <div class="battle-quiz-panel">
+                <div id="timer-box" class="timer-box">
+                  <div class="timer-header">
+                    <span class="timer-label" id="question-category-tag">General Knowledge</span>
+                    <span id="battle-timer-num" class="timer-num tabular-nums">40s</span>
+                  </div>
+                  <div class="timer-bar-track">
+                    <div id="battle-timer-fill" class="timer-bar-fill" style="width: 100%"></div>
+                  </div>
+                  <div id="hero2-sudden-death-notice" class="sudden-death-notice hidden"></div>
+                </div>
+
+                <div class="question-card">
+                  <p id="battle-question-text" class="question-text">Loading question...</p>
+                </div>
+
+                <div id="battle-answers-grid" class="answers-grid"></div>
+
+                <div id="battle-feedback" class="battle-feedback hidden" aria-live="assertive">
+                  <div class="feedback-headline-row">
+                    <strong id="feedback-status">CORRECT!</strong>
+                    <span id="feedback-action">PLAYER ATTACK!</span>
+                  </div>
+                  <p id="feedback-explanation" class="feedback-explanation"></p>
+                </div>
+              </div>
+
+              <!-- Right Column: Boss -->
+              <div class="combatant-panel combatant-boss">
+                <div class="combatant-hud rpg-bevel">
+                  <div class="combatant-name-row">
+                    <span id="battle-boss-name" class="combatant-name">Shadow Knight</span>
+                    <span id="battle-boss-lv" class="combatant-lv tabular-nums">Lv. 1</span>
+                  </div>
+                  <div class="hp-bar-outer" role="progressbar" aria-label="Boss HP">
+                    <div id="boss-hp-trail" class="hp-bar-trail" style="width: 100%"></div>
+                    <div id="boss-hp-fill" class="hp-bar-fill hp-boss" style="width: 100%"></div>
+                  </div>
+                  <div class="hp-numbers-row">
+                    <span class="hp-text tabular-nums" id="boss-hp-text">120 / 120 HP</span>
+                    <span class="hp-state" id="boss-atk-text">ATK: 16</span>
+                  </div>
+                </div>
+
+                <div class="arena-sprite-wrap" id="battle-boss-wrap">
+                  <div id="battle-boss-floor" class="arena-floor-shadow boss-floor"></div>
+                  <canvas
+                    id="battle-boss-canvas"
+                    class="pixel-canvas arena-sprite"
+                    width="220"
+                    height="220"
+                    aria-label="Boss Sprite"
+                  ></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 9. BATTLE RESULT SCREEN -->
+        <section id="screen-result" class="screen result-screen" aria-label="Battle Result">
+          <canvas id="result-particles-canvas" class="result-particles-canvas" aria-hidden="true"></canvas>
+
+          <div class="result-card" id="result-card">
+            <div class="result-header">
+              <h2 id="result-banner-title" class="result-title">VICTORY!</h2>
+              <p id="result-subtitle" class="result-subtitle">Shadow Knight has been defeated.</p>
+            </div>
+
+            <div class="result-showcase">
+              <canvas
+                id="result-sprite-canvas"
+                class="pixel-canvas result-sprite"
+                width="160"
+                height="160"
+                aria-label="Battle outcome character"
+              ></canvas>
+              <div class="result-score-highlight">
+                <span class="result-score-label" data-i18n="res_final_score">Final Battle Score</span>
+                <strong id="res-score" class="result-score-number tabular-nums">0</strong>
+                <div id="res-unlock-banner" class="unlock-banner hidden">
+                  <span data-i18n="res_new_unlock">New Boss Unlocked:</span> <strong id="res-unlock-name">Cyber Reaper</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="result-metrics-grid">
+              <div class="res-metric">
+                <span class="res-k" data-i18n="res_k_outcome">Outcome</span>
+                <strong id="res-outcome" class="res-v">VICTORY</strong>
+              </div>
+              <div class="res-metric">
+                <span class="res-k" data-i18n="res_k_boss">Boss</span>
+                <strong id="res-boss" class="res-v">Shadow Knight</strong>
+              </div>
+              <div class="res-metric">
+                <span class="res-k" data-i18n="res_k_boss_defeated">Boss Defeated</span>
+                <strong id="res-boss-defeated" class="res-v">Yes</strong>
+              </div>
+              <div class="res-metric">
+                <span class="res-k" data-i18n="res_k_difficulty">Difficulty</span>
+                <strong id="res-difficulty" class="res-v">MEDIUM</strong>
+              </div>
+              <div class="res-metric">
+                <span class="res-k" data-i18n="res_k_correct">Correct Answers</span>
+                <strong id="res-correct" class="res-v text-green tabular-nums">0</strong>
+              </div>
+              <div class="res-metric">
+                <span class="res-k" data-i18n="res_k_wrong">Wrong Answers</span>
+                <strong id="res-wrong" class="res-v text-red tabular-nums">0</strong>
+              </div>
+              <div class="res-metric">
+                <span class="res-k" data-i18n="res_k_accuracy">Accuracy</span>
+                <strong id="res-accuracy" class="res-v tabular-nums">0%</strong>
+              </div>
+              <div class="res-metric">
+                <span class="res-k" data-i18n="res_k_combo">Best Combo</span>
+                <strong id="res-combo" class="res-v text-gold tabular-nums">x1</strong>
+              </div>
+              <div class="res-metric">
+                <span class="res-k" data-i18n="res_k_dmg_dealt">Damage Dealt</span>
+                <strong id="res-dmg-dealt" class="res-v text-blue tabular-nums">0</strong>
+              </div>
+              <div class="res-metric">
+                <span class="res-k" data-i18n="res_k_dmg_taken">Damage Received</span>
+                <strong id="res-dmg-taken" class="res-v text-red tabular-nums">0</strong>
+              </div>
+              <div class="res-metric">
+                <span class="res-k" data-i18n="res_k_time">Total Time</span>
+                <strong id="res-time" class="res-v tabular-nums">0s</strong>
+              </div>
+              <div class="res-metric">
+                <span class="res-k" data-i18n="res_k_material">Material</span>
+                <strong id="res-material" class="res-v">ALL MATERIAL</strong>
+              </div>
+            </div>
+
+            <div class="result-actions">
+              <button id="btn-play-again" type="button" class="btn-primary-gold" data-i18n="btn_play_again">PLAY AGAIN</button>
+              <button id="btn-result-bosses" type="button" class="btn-secondary-blue" data-i18n="btn_boss_select">BOSS SELECT</button>
+              <button id="btn-result-menu" type="button" class="btn-ghost" data-i18n="btn_main_menu">MAIN MENU</button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Custom Confirmation Modal for Reset Data -->
+    <div id="reset-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="reset-modal-title">
+      <div class="modal-box">
+        <h3 id="reset-modal-title" class="modal-title" data-i18n="modal_reset_title">Reset All Progress?</h3>
+        <p class="modal-body" data-i18n="modal_reset_body">
+          This will clear your player profile, high scores, battle history, and reset all unlocked bosses back to Level 1.
+        </p>
+        <div class="modal-actions">
+          <button id="btn-cancel-reset" type="button" class="btn-ghost" data-i18n="btn_cancel">Cancel</button>
+          <button id="btn-confirm-reset" type="button" class="btn-danger" data-i18n="btn_confirm_reset">Confirm Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/script.js"></script>
+  </body>
+</html>
